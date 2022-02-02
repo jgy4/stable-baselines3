@@ -390,12 +390,27 @@ class RolloutBuffer(BaseBuffer):
             else:
                 next_non_terminal = 1.0 - self.episode_starts[step + 1]
                 next_values = self.values[step + 1]
-            delta = self.rewards[step] + self.gamma * next_values * next_non_terminal - self.values[step]
-            last_gae_lam = delta + self.gamma * self.gae_lambda * next_non_terminal * last_gae_lam
-            self.advantages[step] = last_gae_lam
+                
+            if n_step:
+                R = rewards[step] + (self.gamma * R * next_non_terminal)
+                self.advantages[step] = R - (self.values[step])
+            else:
+                delta = self.rewards[step] + self.gamma * next_values * next_non_terminal - self.values[step]
+                last_gae_lam = delta + self.gamma * self.gae_lambda * next_non_terminal * last_gae_lam
+                self.advantages[step] = last_gae_lam
+                
         # TD(lambda) estimator, see Github PR #375 or "Telescoping in TD(lambda)"
         # in David Silver Lecture 4: https://www.youtube.com/watch?v=PnHCvfgC_ZA
         self.returns = self.advantages + self.values
+        
+        compute_returns(next_value, rewards, masks, gamma=0.99):
+            R = next_value
+            returns = []
+            for step in reversed(range(len(rewards))):
+                R = rewards[step] + gamma*R*masks[step]
+                returns.insert(0, R)
+            return returns
+        
 
     def add(
         self,
