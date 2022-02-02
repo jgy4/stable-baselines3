@@ -403,14 +403,6 @@ class RolloutBuffer(BaseBuffer):
         # in David Silver Lecture 4: https://www.youtube.com/watch?v=PnHCvfgC_ZA
         self.returns = self.advantages + self.values
         
-        compute_returns(next_value, rewards, masks, gamma=0.99):
-            R = next_value
-            returns = []
-            for step in reversed(range(len(rewards))):
-                R = rewards[step] + gamma*R*masks[step]
-                returns.insert(0, R)
-            return returns
-        
 
     def add(
         self,
