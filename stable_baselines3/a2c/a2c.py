@@ -74,6 +74,7 @@ class A2C(OnPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
+        n_step: bool = False,
     ):
 
         super(A2C, self).__init__(
