@@ -86,7 +86,7 @@ class DQN(OffPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
-        doubleDQN = True,
+        doubleDQN: bool = True,
     ):
 
         super(DQN, self).__init__(
