@@ -86,6 +86,7 @@ class DQN(OffPolicyAlgorithm):
         seed: Optional[int] = None,
         device: Union[th.device, str] = "auto",
         _init_setup_model: bool = True,
+        doubleDQN = True,
     ):
 
         super(DQN, self).__init__(
@@ -113,6 +114,7 @@ class DQN(OffPolicyAlgorithm):
             optimize_memory_usage=optimize_memory_usage,
             supported_action_spaces=(gym.spaces.Discrete,),
             support_multi_env=True,
+            doubleDQN=doubleDQN,
         )
 
         self.exploration_initial_eps = exploration_initial_eps
@@ -181,7 +183,10 @@ class DQN(OffPolicyAlgorithm):
 
             with th.no_grad():
                 # Compute the next Q-values using the target network
-                next_q_values = self.q_net_target(replay_data.next_observations)
+                if self.doubleDQN:
+                    next_q_values = self.q_net_target(replay_data.next_observations)
+                else:
+                    next_q_values = self.q_net(replay_data.next_observations)
                 # Follow greedy policy: use the one with the highest value
                 next_q_values, _ = next_q_values.max(dim=1)
                 # Avoid potential broadcast issue
