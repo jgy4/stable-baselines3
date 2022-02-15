@@ -129,6 +129,7 @@ class DQN(OffPolicyAlgorithm):
         # Linear schedule will be defined in `_setup_model()`
         self.exploration_schedule = None
         self.q_net, self.q_net_target = None, None
+        self.doubleDQN = doubleDQN
 
         if _init_setup_model:
             self._setup_model()
